@@ -77,8 +77,9 @@ class _MyHomePageState extends State<MyHomePage>
 
 class Spiral extends StatefulWidget {
   final double size;
+  final int seed;
 
-  const Spiral({Key key, this.size}) : super(key: key);
+  const Spiral({Key key, this.size, this.seed}) : super(key: key);
 
   @override
   _SpiralState createState() => _SpiralState();
@@ -87,39 +88,19 @@ class Spiral extends StatefulWidget {
 class _SpiralState extends State<Spiral> {
   List<Offset> points;
 
-  @override
-  void initState() {
-    super.initState();
-
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: SpiralPainter(),
-    );
-  }
-}
-
-class SpiralPainter extends CustomPainter {
   final Curve densityCurve = Curves.easeInExpo;
   final double granularity = 0.001;
   final double percentComplete = 0.1;
   final int numberArms = 2;
   final int starsPerTick = 20;
-
-  final math.Random _random;
-
-  SpiralPainter({int seed}) : _random = math.Random(seed);
+  math.Random _random;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-
-    final viewSize = size.width;
+  void initState() {
+    super.initState();
+    points = [];
+    final viewSize = widget.size;
+    _random = math.Random(widget.seed);
 
     for (int arm = 0; arm < numberArms; arm++) {
       Path path = Path();
@@ -136,8 +117,7 @@ class SpiralPainter extends CustomPainter {
         double originX = viewSize / 2 + radius * math.cos(angle);
         double originY = viewSize / 2 + radius * math.sin(angle);
 
-        List stars = generateStarList(radius, Offset(originX, originY));
-        canvas.drawPoints(PointMode.points, stars, paint);
+        points += generateStarList(radius, Offset(originX, originY));
 
         path.lineTo(originX, originY);
       }
@@ -161,6 +141,29 @@ class SpiralPainter extends CustomPainter {
       stars.add(Offset(starX, starY) + origin);
     }
     return stars;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: SpiralPainter(points),
+    );
+  }
+}
+
+class SpiralPainter extends CustomPainter {
+  final List<Offset> points;
+
+  SpiralPainter(this.points);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawPoints(PointMode.points, points, paint);
   }
 
   @override
