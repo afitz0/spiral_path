@@ -26,7 +26,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-  SpiralPainter starField;
 
   @override
   void initState() {
@@ -43,20 +42,7 @@ class _MyHomePageState extends State<MyHomePage>
 
     return Scaffold(
       body: Center(
-        // /* This is a series of random arcs. */
-        // child: Container(
-        //   width: size,
-        //   height: size,
-        //   decoration: ShapeDecoration(
-        //     color: Colors.transparent,
-        //     // border: Border(bottom: BorderSide(color: Colors.white, width: 2.0)),
-        //     shape: CircleBorder(
-        //       side: BorderSide(color: Colors.white, width: 2.0),
-        //     ),
-        //   ),
-        // ),
         child: Container(
-          color: Colors.black,
           width: size,
           height: size,
           child: RotationTransition(
@@ -92,7 +78,7 @@ class _SpiralState extends State<Spiral> {
   final double granularity = 0.001;
   final double percentComplete = 0.1;
   final int numberArms = 2;
-  final int starsPerTick = 20;
+  final int starsPerTick = 30;
   math.Random _random;
 
   @override
@@ -169,38 +155,5 @@ class SpiralPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
-  }
-}
-
-class ArcPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-
-    // TODO: what's a reasonable sweep angle?
-    double sweepAngle = math.pi * 2 / 3;
-
-    // create path
-    Path path = Path();
-    // for oval/rect sizes starting very small and increasing to size of square viewport (i.e., width by width)
-    for (double i = 0; i < 1.0; i += 0.1) {
-      Rect rect = Rect.fromCenter(
-        center: Offset(size.width / 2, size.width / 2),
-        width: size.width * i,
-        height: size.width * i,
-      );
-
-      path.addArc(rect, i * math.pi * 2, sweepAngle);
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }
