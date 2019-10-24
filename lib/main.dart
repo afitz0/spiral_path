@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(seconds: 30),
+      duration: const Duration(seconds: 15),
       vsync: this,
     )..repeat();
   }
@@ -40,6 +40,8 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
 
+    var spiral = Spiral(size: size);
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -47,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage>
           height: size,
           child: RotationTransition(
             turns: _animationController,
-            child: Spiral(size: size),
+            child: spiral,
           ),
         ),
       ),
@@ -78,7 +80,7 @@ class _SpiralState extends State<Spiral> {
   final double granularity = 0.001;
   final double percentComplete = 0.1;
   final int numberArms = 2;
-  final int starsPerTick = 30;
+  final int starsPerTick = 20;
   math.Random _random;
 
   @override
@@ -107,9 +109,6 @@ class _SpiralState extends State<Spiral> {
 
         path.lineTo(originX, originY);
       }
-
-      // draw path for reference. Not normally needed.
-      //canvas.drawPath(path, paint);
     }
   }
 
